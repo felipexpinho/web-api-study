@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 # --- CREATE MODELS ---
 class StockCreate(BaseModel):
@@ -8,8 +8,7 @@ class StockCreate(BaseModel):
     is_available: bool
     category: str
 
-    class Config:
-        orm_mode = True  # Allows the model to work with SQLAlchemy ORM instances
+    model_config = ConfigDict(from_attributes=True)
 
 # --- RESPONSE MODELS ---
 class StockResponse(BaseModel):
@@ -22,8 +21,7 @@ class StockResponse(BaseModel):
     product_name: str
     store_name: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- UPDATE MODELS ---
 class StockUpdate(BaseModel):
@@ -32,5 +30,4 @@ class StockUpdate(BaseModel):
     is_available: bool = Field(None)
     category: str = Field(None)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

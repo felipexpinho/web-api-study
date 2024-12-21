@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List
 from .stock import StockResponse
 
@@ -6,8 +6,7 @@ from .stock import StockResponse
 class StoreCreate(BaseModel):
     name: str
 
-    class Config:
-        orm_mode = True  # Allows the model to work with SQLAlchemy ORM instances
+    model_config = ConfigDict(from_attributes=True)
 
 # --- RESPONSE MODELS ---
 class StoreResponse(BaseModel):
@@ -15,12 +14,10 @@ class StoreResponse(BaseModel):
     name: str
     stock: List[StockResponse]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- UPDATE MODELS ---
 class StoreUpdate(BaseModel):
     name: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
