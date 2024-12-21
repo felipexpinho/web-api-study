@@ -228,6 +228,13 @@ def update_stock(stock_id: int, price: float = None, is_available: bool = None, 
         print(f"Error: {response.status_code}, {response.text}")
 
 
+def check_rate_limit():
+    url = "http://127.0.0.1:8000/limited-requests"
+    # Send a GET request to the rate-limited endpoint
+    response = requests.get(url)
+
+    return {"status_code": response.status_code, "content": response.json()}
+
 def populate_table():
     create_store("Nike")
     create_store("Adidas")

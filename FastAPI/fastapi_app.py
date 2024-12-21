@@ -1,6 +1,10 @@
 import uvicorn
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Request
+from fastapi.responses import JSONResponse
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
@@ -18,6 +22,20 @@ from database.session import Base, engine, get_db
 from utils.response import create_response
 
 app = FastAPI()
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+
+@app.exception_handler(RateLimitExceeded)
+def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse(
+        content={"error": "Rate limit exceeded", "detail": str(exc.detail)},
+        status_code=429
+    )
+
+@app.get("/limited-requests")
+@limiter.limit("1000/hour") 
+def limited_endpoint(request: Request):
+    return {"message": "This endpoint is rate-limited to 1000 requests per hour."}
 
 # ------------ API POST ------------
 
