@@ -1,28 +1,31 @@
-from flask import Flask, request, jsonify
-from sqlalchemy.orm import Session
-from database.session import SessionLocal, Base, engine
-from models.store import Store
+from flask import Flask, g
+from routes.store import store_blueprint
+from database.session import Base, engine, SessionLocal
 
-# Create all tables
-Base.metadata.create_all(bind=engine)
+# Import all models to register them with Base.metadata
+from models.store import Store
+from models.product import Product
+from models.stock import Stock
 
 app = Flask(__name__)
 
-@app.route("/store", methods=["POST"])
-def create_store():
-    db: Session = SessionLocal()
-    try:
-        data = request.get_json()
-        if "name" not in data:
-            return jsonify({"error": "Missing parameter 'name'"}), 400
+# Register blueprints
+app.register_blueprint(store_blueprint, url_prefix="/store")
 
-        new_store = Store(name=data["name"])
-        db.add(new_store)
-        db.commit()
-        db.refresh(new_store)  # Refresh to get the ID
-        return jsonify(new_store._asdict()), 201
-    except Exception as e:
-        db.rollback() # Undo anything that has been done inside the Try
-        return jsonify({"error": str(e)}), 500
-    finally:
+@app.before_request
+def create_db_session():
+    """Create a new database session before each request."""
+    g.db = SessionLocal()
+
+@app.teardown_request
+def close_db_session(exception=None):
+    """Close the database session after each request."""
+    db = g.pop("db", None)
+    if db:
         db.close()
+
+if __name__ == "__main__":
+    # Create all tables
+    Base.metadata.create_all(bind=engine)
+
+    app.run(debug=True, port=8000)
