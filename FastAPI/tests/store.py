@@ -96,7 +96,7 @@ def test_create_store_wrong_type(setup_database):
 # ------------ API GET ------------
 
 def test_get_store_empty(setup_database):
-    response = client.get("/stores", params={})
+    response = client.get("/store", params={})
     assert response.status_code == 200
     assert response.json()["message"] == "Stores fetched successfully"
     assert response.json()["data"] == [
@@ -156,7 +156,7 @@ def test_get_store_empty(setup_database):
     ]
 
 def test_get_store_by_id(setup_database):
-    response = client.get("/stores", params={"id": 1})
+    response = client.get("/store", params={"id": 1})
     assert response.status_code == 200
     assert response.json()["message"] == "Stores fetched successfully"
     assert response.json()["data"] == [
@@ -189,7 +189,7 @@ def test_get_store_by_id(setup_database):
     ]
 
 def test_get_store_by_name(setup_database):
-    response = client.get("/stores", params={"name": "Nik"})
+    response = client.get("/store", params={"name": "Nik"})
     assert response.status_code == 200
     assert response.json()["message"] == "Stores fetched successfully"
     assert response.json()["data"] == [
@@ -222,7 +222,7 @@ def test_get_store_by_name(setup_database):
     ]
 
 def test_get_store_not_in_database(setup_database):
-    response = client.get("/stores", params={"name": "Kabum"})
+    response = client.get("/store", params={"name": "Kabum"})
     assert response.status_code == 404
     assert response.json()["detail"] == "Store not found"
 

@@ -96,7 +96,7 @@ def test_create_product_wrong_type(setup_database):
 # ------------ API GET ------------
 
 def test_get_product_empty(setup_database):
-    response = client.get("products", params={})
+    response = client.get("product", params={})
     assert response.status_code == 200
     assert response.json()["message"] == "Products fetched successfully"
     assert response.json()["data"] == [
@@ -168,7 +168,7 @@ def test_get_product_empty(setup_database):
     ]
 
 def test_get_product_by_id(setup_database):
-    response = client.get("products", params={"id": 1})
+    response = client.get("product", params={"id": 1})
     assert response.status_code == 200
     assert response.json()["message"] == "Products fetched successfully"
     assert response.json()["data"] == [
@@ -191,7 +191,7 @@ def test_get_product_by_id(setup_database):
     ]
 
 def test_get_product_by_name(setup_database):
-    response = client.get("products", params={"name": "Air"})
+    response = client.get("product", params={"name": "Air"})
     assert response.status_code == 200
     assert response.json()["message"] == "Products fetched successfully"
     assert response.json()["data"] == [
@@ -230,7 +230,7 @@ def test_get_product_by_name(setup_database):
     ]
 
 def test_get_product_not_in_database(setup_database):
-    response = client.get("products", params={"name": "AllStar"})
+    response = client.get("product", params={"name": "AllStar"})
     assert response.status_code == 404
     assert response.json()["detail"] == "Product not found"
 

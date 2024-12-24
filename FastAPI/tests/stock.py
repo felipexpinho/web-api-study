@@ -178,7 +178,7 @@ def test_create_stock_wrong_type_category(setup_database):
 # ------------ API GET ------------
 
 def test_get_stock_empty(setup_database):
-    response = client.get("stocks", params={})
+    response = client.get("stock", params={})
     assert response.status_code == 200
     assert response.json()["message"] == "Stocks fetched successfully"
     assert response.json()["data"] == [
@@ -235,7 +235,7 @@ def test_get_stock_empty(setup_database):
     ]
 
 def test_get_stock_by_product_name(setup_database):
-    response = client.get("stocks", params={"product_name": "Air"})
+    response = client.get("stock", params={"product_name": "Air"})
     assert response.status_code == 200
     assert response.json()["message"] == "Stocks fetched successfully"
     assert response.json()["data"] == [
@@ -262,7 +262,7 @@ def test_get_stock_by_product_name(setup_database):
     ]
 
 def test_get_stock_by_max_price(setup_database):
-    response = client.get("stocks", params={"max_price": 600})
+    response = client.get("stock", params={"max_price": 600})
     assert response.status_code == 200
     assert response.json()["message"] == "Stocks fetched successfully"
     assert response.json()["data"] == [
@@ -299,7 +299,7 @@ def test_get_stock_by_max_price(setup_database):
     ]
 
 def test_get_stock_by_is_available(setup_database):
-    response = client.get("stocks", params={"is_available": True})
+    response = client.get("stock", params={"is_available": True})
     assert response.status_code == 200
     assert response.json()["message"] == "Stocks fetched successfully"
     assert response.json()["data"] == [
@@ -356,7 +356,7 @@ def test_get_stock_by_is_available(setup_database):
     ]
 
 def test_get_stock_by_category(setup_database):
-    response = client.get("stocks", params={"category": "Tên"})
+    response = client.get("stock", params={"category": "Tên"})
     assert response.status_code == 200
     assert response.json()["message"] == "Stocks fetched successfully"
     assert response.json()["data"] == [
@@ -413,7 +413,7 @@ def test_get_stock_by_category(setup_database):
     ]
 
 def test_get_stock_not_in_database(setup_database):
-    response = client.get("stocks", params={"product_name": "AllStar"})
+    response = client.get("stock", params={"product_name": "AllStar"})
     assert response.status_code == 404
     assert response.json()["detail"] == "No matching stocks found"
 

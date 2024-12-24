@@ -22,17 +22,17 @@ def create_store():
             return jsonify({"error": "Input should be a valid string"}), 422
 
         # Call service to create store
-        new_store = create_store_service(store_data=store_data, db=db)  # Pass the session explicitly
+        new_store = create_store_service(store_data=store_data, db=db)
         return jsonify({
             "status": "success",
             "message": "Store created successfully",
             "data": new_store
         }), 201
     except SQLAlchemyError as e:
-        db.rollback()  # Roll back the transaction on SQLAlchemy errors
+        db.rollback()
         return jsonify({"error": "Database error", "details": str(e)}), 500
     except Exception as e:
-        db.rollback()  # Roll back the transaction on other exceptions
+        db.rollback()
         return jsonify({"error": "Bad request", "details": str(e)}), 400
 
 

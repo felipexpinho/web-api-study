@@ -63,7 +63,7 @@ def create_stock(store_id, product_id, price, is_available, category):
 
 
 def get_store(id = None, name = None):
-    url = "http://127.0.0.1:8000/stores"
+    url = "http://127.0.0.1:8000/store"
 
     params = {}
 
@@ -83,7 +83,7 @@ def get_store(id = None, name = None):
         print(f"Error: {response.status_code}, {response.text}")
 
 def get_product(id = None, name = None):
-    url = "http://127.0.0.1:8000/products"
+    url = "http://127.0.0.1:8000/product"
 
     params = {}
 
@@ -103,7 +103,7 @@ def get_product(id = None, name = None):
         print(f"Error: {response.status_code}, {response.text}")
 
 def get_stocks(product_name=None, store_name=None, max_price=None, is_available=None, category=None):
-    url = "http://127.0.0.1:8000/stocks"
+    url = "http://127.0.0.1:8000/stock"
     params = {}
 
     if product_name:
@@ -246,6 +246,3 @@ def populate_table():
     create_stock(1, 2, 800, True, "Tênis")
     create_stock(2, 3, 800, True, "Tênis")
     create_stock(2, 4, 600, True, "Tênis")
-
-
-create_store(None)

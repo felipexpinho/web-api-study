@@ -97,7 +97,7 @@ def create_stock_endpoint(stock: StockCreate, db: Session = Depends(get_db)):
 
 # ------------ API GET ------------
 
-@app.get("/stores", response_model=List[StoreResponse])
+@app.get("/store", response_model=List[StoreResponse])
 def get_stores_endpoint(
     id: Optional[int] = None, name: Optional[str] = None, db: Session = Depends(get_db)
 ):
@@ -118,7 +118,7 @@ def get_stores_endpoint(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@app.get("/products", response_model=List[ProductResponse])
+@app.get("/product", response_model=List[ProductResponse])
 def get_products_endpoint(id: Optional[int] = None, name: Optional[str] = None, db: Session = Depends(get_db)):
     try:
         products = get_products_service(id=id, name=name, db=db)
@@ -137,7 +137,7 @@ def get_products_endpoint(id: Optional[int] = None, name: Optional[str] = None, 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@app.get("/stocks", response_model=List[StockResponse])
+@app.get("/stock", response_model=List[StockResponse])
 def get_stocks_endpoint(
     product_name: Optional[str] = None,
     store_name: Optional[str] = None,
