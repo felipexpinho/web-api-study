@@ -33,7 +33,7 @@ def create_store_service(store_data: dict, db: Session) -> dict:
         db.commit()
         db.refresh(new_store)
         
-        return {"id": new_store.id, "name": new_store.name}
+        return new_store._asdict_no_stock()
     except Exception as e:
         db.rollback()
         raise e
@@ -70,27 +70,7 @@ def get_stores_service(db: Session, store_id: Optional[int] = None, name: Option
     if not stores:
         raise ValueError("Store not found")
 
-    # Prepare the response data
-    return [
-        {
-            "id": store.id,
-            "name": store.name,
-            "stock": [
-                {
-                    "id": stock.id,
-                    "store_id": stock.store_id,
-                    "product_id": stock.product_id,
-                    "price": stock.price,
-                    "is_available": stock.is_available,
-                    "category": stock.category,
-                    "product_name": stock.product.name,
-                    "store_name": stock.store.name
-                }
-                for stock in store.stock
-            ]
-        }
-        for store in stores
-    ]
+    return [store._asdict() for store in stores]
 
 
 # ------------ API DELETE ------------
@@ -145,7 +125,6 @@ def update_store_service(store_id: int, store_update: dict, db: Session) -> dict
         KeyError: If required fields are missing in the update data.
         TypeError: If the field types are incorrect.
     """
-    # Query the store by ID
     store = db.query(Store).filter(Store.id == store_id).first()
     
     if not store:
@@ -157,5 +136,5 @@ def update_store_service(store_id: int, store_update: dict, db: Session) -> dict
     db.commit()
     db.refresh(store)
 
-    # Convert the updated store object to a dictionary for the response
-    return {"id": store.id, "name": store.name}
+    # Return the updated store data
+    return store._asdict_no_stock()
