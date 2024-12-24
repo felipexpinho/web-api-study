@@ -1,4 +1,6 @@
-from flask import Flask, g
+from flask import Flask, g, jsonify
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from routes.store import store_blueprint
 from routes.stock import stock_blueprint
@@ -8,6 +10,18 @@ import database.test_session as test_session
 
 def create_app(config_name="default"):
     app = Flask(__name__)
+
+    # Limiter for api requests
+    limiter = Limiter(
+        get_remote_address,
+        app=app,
+        default_limits=["1000 per hour"]
+    )
+
+    # Custom ratelimit message
+    @app.errorhandler(429)
+    def ratelimit_error(e):
+        return jsonify(error="ratelimit exceeded", details=str(e.description), message="This endpoint is rate-limited to 1000 requests per hour."), 429
     
     if config_name == "testing":
         app.config.update({
