@@ -16,7 +16,7 @@ def create_store_service(store: StoreCreate, db: Session) -> dict:
     db.commit()
     db.refresh(new_store)
 
-    return new_store._asdict()
+    return new_store._asdict_no_stock()
 
 
 # ------------ API GET ------------
@@ -95,4 +95,4 @@ def update_store(store_id: int, store_update: StoreUpdate, db: Session) -> dict:
     db.refresh(store)
     
     # Return the updated store data
-    return store._asdict()
+    return store._asdict_no_stock()

@@ -16,7 +16,7 @@ def create_product_service(product: ProductCreate, db: Session) -> dict:
     db.commit()
     db.refresh(new_product)  # Refresh to get the ID
 
-    return new_product._asdict()
+    return new_product._asdict_no_stock()
 
 
 # ------------ API GET ------------
@@ -95,4 +95,4 @@ def update_product_service(product_id: int, product_update: ProductUpdate, db: S
     db.refresh(product)
     
     # Return the updated product data
-    return product._asdict()
+    return product._asdict_no_stock()
