@@ -10,7 +10,18 @@ from models.stock import Stock
 # ------------ API POST ------------
 
 def create_store_service(store: StoreCreate, db: Session) -> dict:
-    # Create the store in the database
+    """
+    Service to create a new store in the database.
+
+    Args:
+        store (StoreCreate): The schema containing the details of the store to be created.
+        db (Session): SQLAlchemy session object.
+
+    Returns:
+        dict: A dictionary containing the details of the created store.
+            id (int): The unique ID of the created store.
+            name (str): The name of the created store.
+    """
     new_store = Store(name=store.name)
     db.add(new_store)
     db.commit()
@@ -21,7 +32,21 @@ def create_store_service(store: StoreCreate, db: Session) -> dict:
 
 # ------------ API GET ------------
 
-def get_stores_service(id: Optional[int], name: Optional[str], db: Session):
+def get_stores_service(id: Optional[int], name: Optional[str], db: Session) -> List[StoreResponse]:
+    """
+    Service function to fetch stores based on optional filters.
+
+    Args:
+        id (Optional[int]): ID of the store to filter by.
+        name (Optional[str]): Name of the store to filter by.
+        db (Session): SQLAlchemy session object.
+
+    Returns:
+        List[StoreResponse]: List of stores with their details.
+
+    Raises:
+        ValueError: If no stores are found.
+    """
     query = db.query(Store).options(joinedload(Store.stock).joinedload(Stock.product))  # Join stock and product
 
     # Filter by store ID or name if provided
@@ -62,7 +87,19 @@ def get_stores_service(id: Optional[int], name: Optional[str], db: Session):
 # ------------ API DELETE ------------
 
 def delete_store(store_id: int, db: Session) -> dict:
-    # Query the store by ID
+    """
+    Service to delete a store by ID from the database.
+
+    Args:
+        store_id (int): The ID of the store to delete.
+        db (Session): The SQLAlchemy session.
+
+    Returns:
+        dict: A dictionary containing the ID of the deleted store.
+
+    Raises:
+        ValueError: If the store with the given ID does not exist.
+    """
     store = db.query(Store).filter(Store.id == store_id).first()
     
     if not store:
@@ -83,7 +120,17 @@ def delete_store(store_id: int, db: Session) -> dict:
 # ------------ API UPDATE ------------
 
 def update_store(store_id: int, store_update: StoreUpdate, db: Session) -> dict:
-    # Query the store by ID
+    """
+    Service to update a store by ID.
+
+    Args:
+        store_id (int): The ID of the store to update.
+        store_update (StoreUpdate): The schema containing the updated store data.
+        db (Session): The SQLAlchemy session.
+
+    Returns:
+        dict: A dictionary with the updated store details.
+    """
     store = db.query(Store).filter(Store.id == store_id).first()
     
     if not store:

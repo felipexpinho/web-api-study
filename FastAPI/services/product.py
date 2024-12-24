@@ -10,7 +10,18 @@ from models.stock import Stock
 # ------------ API POST ------------
 
 def create_product_service(product: ProductCreate, db: Session) -> dict:
-    # Create the new product
+    """
+    Service to create a new product in the database.
+
+    Args:
+        product (ProductCreate): The schema for product creation
+        db (Session): SQLAlchemy session object.
+
+    Returns:
+        dict: A dictionary containing the details of the created product.
+            id (int): The unique ID of the created product.
+            name (str): The name of the created product.
+    """
     new_product = Product(name=product.name)
     db.add(new_product)
     db.commit()
@@ -21,7 +32,21 @@ def create_product_service(product: ProductCreate, db: Session) -> dict:
 
 # ------------ API GET ------------
 
-def get_products_service(id: Optional[int], name: Optional[str], db: Session):
+def get_products_service(id: Optional[int], name: Optional[str], db: Session) -> List[ProductResponse]:
+    """
+    Service function to fetch products based on optional filters.
+
+    Args:
+        id (Optional[int]): ID of the product to filter by.
+        name (Optional[str]): Name of the product to filter by.
+        db (Session): SQLAlchemy session object.
+
+    Returns:
+        List[ProductResponse]: List of the products.
+
+    Raises:
+        ValueError: If no products are found.
+    """
     query = db.query(Product).options(joinedload(Product.stock).joinedload(Stock.store))  # Join stock and product
 
     # Filter by product id or name if provided
@@ -62,7 +87,19 @@ def get_products_service(id: Optional[int], name: Optional[str], db: Session):
 # ------------ API DELETE ------------
 
 def delete_product_service(product_id: int, db: Session) -> dict:
-    # Query the product by ID
+    """
+    Service to delete a product by ID from the database.
+
+    Args:
+        product_id (int): The ID of the product to delete.
+        db (Session): The SQLAlchemy session.
+
+    Returns:
+        dict: A dictionary containing the ID of the deleted product.
+
+    Raises:
+        ValueError: If the product with the given ID does not exist.
+    """
     product = db.query(Product).filter(Product.id == product_id).first()
     
     if not product:
@@ -83,7 +120,17 @@ def delete_product_service(product_id: int, db: Session) -> dict:
 # ------------ API UPDATE ------------
 
 def update_product_service(product_id: int, product_update: ProductUpdate, db: Session) -> dict:
-    # Query the product by ID
+    """
+    Service to update a product by ID.
+
+    Args:
+        product_id (int): The ID of the product to update.
+        product_update (ProductUpdate): The schema containing the updated product data.
+        db (Session): The SQLAlchemy session.
+
+    Returns:
+        dict: A dictionary with the updated product details.
+    """
     product = db.query(Product).filter(Product.id == product_id).first()
     
     if not product:

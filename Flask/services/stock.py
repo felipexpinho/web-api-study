@@ -130,15 +130,15 @@ def get_stocks_service(
         db (Session): SQLAlchemy session object.
         product_name (Optional[str]): Name of the product to filter by.
         store_name (Optional[str]): Name of the store to filter by.
-        max_price (float): Max price to filter by.
-        is_available (bool): Availability to filter by. True if the product is in stock/False if not.
-        category (str): Category to filter by.
+        max_price (Optional[float]): Max price to filter by.
+        is_available (Optional[bool]): Availability to filter by. True if the product is in stock/False if not.
+        category (Optional[str]): Category to filter by.
 
     Returns:
-        List[Dict[str, Any]]: List of stores with their details.
+        List[Dict[str, Any]]: List of stocks with their details.
 
     Raises:
-        ValueError: If no stores are found.
+        ValueError: If no stocks are found.
     """
     query = db.query(Stock).options(joinedload(Stock.product), joinedload(Stock.store))
 

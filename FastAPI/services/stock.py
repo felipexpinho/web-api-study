@@ -12,6 +12,27 @@ from models.stock import Stock
 # ------------ API POST ------------
 
 def create_stock_service(stock: StockCreate, db: Session) -> dict:
+    """
+    Service to create a new stock in the database.
+
+    Args:
+        stock (StockCreate): The schema containing the details of the stock to be created.
+        db (Session): SQLAlchemy session object.
+
+    Returns:
+        dict: A dictionary containing the details of the created stock.
+            id (int): The unique ID of the created stock.
+            store_id (str): The id of the id of the store related to the stock.
+            product_id (int): The id of the product related to the stock.
+            price_id (float): The price of the product in that store.
+            is_available (bool): True if the product is in stock/False if not.
+            category (str): The category of the product in that store.
+            store (str): The name of the store related to the stock.
+            product_name (str): The name of the product related to the stock.
+
+    Raises:
+        ValueError: If no Store or Product is found.
+    """
     # Check if the store exists
     store = db.query(Store).filter(Store.id == stock.store_id).first()
     if not store:
@@ -46,13 +67,29 @@ def create_stock_service(stock: StockCreate, db: Session) -> dict:
 
 def get_stocks_service(
     db: Session, 
-    product_name: str = None, 
-    store_name: str = None, 
-    max_price: float = None, 
-    is_available: bool = None, 
-    category: str = None
-) -> list:
-    # Initialize the query with necessary joins
+    product_name: Optional[str], 
+    store_name: Optional[str], 
+    max_price: Optional[float], 
+    is_available: Optional[bool], 
+    category: Optional[str]
+) -> List[StockResponse]:
+    """
+    Service function to fetch stocks based on optional filters.
+
+    Args:
+        db (Session): SQLAlchemy session object.
+        product_name (Optional[str]): Name of the product to filter by.
+        store_name (Optional[str]): Name of the store to filter by.
+        max_price (float): Max price to filter by.
+        is_available (bool): Availability to filter by. True if the product is in stock/False if not.
+        category (str): Category to filter by.
+
+    Returns:
+        List[StockResponse]: List of stocks with their details.
+
+    Raises:
+        ValueError: If no stocks are found.
+    """
     query = db.query(Stock).options(joinedload(Stock.product), joinedload(Stock.store))
 
     # Apply filters based on provided parameters
@@ -94,7 +131,16 @@ def get_stocks_service(
 # ------------ API DELETE ------------
 
 def delete_stock_service(stock_id: int, db: Session) -> dict:
-    # Query the stock by ID
+    """
+    Service to delete a stock by ID from the database.
+
+    Args:
+        stock_id (int): The ID of the stock to delete.
+        db (Session): The SQLAlchemy session.
+
+    Returns:
+        dict: A dictionary containing the ID of the deleted store.
+    """
     stock = db.query(Stock).filter(Stock.id == stock_id).first()
     
     if not stock:
@@ -110,26 +156,25 @@ def delete_stock_service(stock_id: int, db: Session) -> dict:
 
 # ------------ API UPDATE ------------
 
-def update_store_service(store_id: int, store_update: StoreUpdate, db: Session) -> dict:
-    # Query the store by ID
-    store = db.query(Store).filter(Store.id == store_id).first()
-    
-    if not store:
-        raise ValueError("Store not found")
-    
-    # Update the store data
-    store.name = store_update.name
-    db.commit()
-    db.refresh(store)
-    
-    # Return the updated store data
-    return store._asdict()
-
 def update_stock_service(
     db: Session, 
     stock_id: int, 
     stock_update: StockUpdate
 ) -> Stock:
+    """
+    Service to update a stock by ID.
+
+    Args:
+        db (Session): The SQLAlchemy session.
+        stock_id (int): The ID of the stock to update.
+        stock_update (StockUpdate): The schema containing the details of the stock to be updated.
+
+    Returns:
+        Stock: The schema of the updated store details.
+        
+    Raises:
+        ValueError: If the store with the given ID is not found or if there's nothing to update.
+    """
     # Fetch the stock to update
     stock = db.query(Stock).filter(Stock.id == stock_id).first()
 
