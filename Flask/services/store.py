@@ -55,7 +55,6 @@ def get_stores_service(db: Session, store_id: Optional[int] = None, name: Option
 
     Raises:
         ValueError: If no stores are found.
-        RuntimeError: If db is None.
     """
     query = db.query(Store).options(joinedload(Store.stock).joinedload(Stock.product))
 
@@ -122,8 +121,6 @@ def update_store_service(store_id: int, store_update: dict, db: Session) -> dict
         
     Raises:
         ValueError: If the store with the given ID is not found.
-        KeyError: If required fields are missing in the update data.
-        TypeError: If the field types are incorrect.
     """
     store = db.query(Store).filter(Store.id == store_id).first()
     

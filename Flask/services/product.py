@@ -52,7 +52,6 @@ def get_products_service(db: Session, product_id: Optional[int] = None, name: Op
 
     Raises:
         ValueError: If no products are found.
-        RuntimeError: If db is None.
     """
     query = db.query(Product).options(joinedload(Product.stock).joinedload(Stock.store))
 
@@ -117,8 +116,6 @@ def update_product_service(product_id: int, product_update: dict, db: Session) -
         
     Raises:
         ValueError: If the product with the given ID is not found.
-        KeyError: If required fields are missing in the update data.
-        TypeError: If the field types are incorrect.
     """
     product = db.query(Product).filter(Product.id == product_id).first()
 
