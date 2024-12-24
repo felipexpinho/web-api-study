@@ -12,18 +12,16 @@ def create_product_service(product_data: dict, db: Session) -> dict:
 
     Args:
         product_data (dict): A dictionary containing the details of the product to be created.
-            - Required key: "name" (str): The name of the product.
+            Required key: "name" (str): The name of the product.
         db (Session): SQLAlchemy session object.
 
     Returns:
         dict: A dictionary containing the details of the created product.
-            - Keys:
-                - "id" (int): The unique ID of the created product.
-                - "name" (str): The name of the created product.
+            "id" (int): The unique ID of the created product.
+            "name" (str): The name of the created product.
 
     Raises:
-        Exception: If any error occurs during the database transaction, it is rolled back, 
-                   and the exception is re-raised.
+        Exception: If any error occurs during the database transaction, it is rolled back, and the exception is re-raised.
     """
     try:
         new_product = Product(name=product_data["name"])

@@ -13,18 +13,16 @@ def create_store_service(store_data: dict, db: Session) -> dict:
 
     Args:
         store_data (dict): A dictionary containing the details of the store to be created.
-            - Required key: "name" (str): The name of the store.
+            Required key: "name" (str): The name of the store.
         db (Session): SQLAlchemy session object.
 
     Returns:
         dict: A dictionary containing the details of the created store.
-            - Keys:
-                - "id" (int): The unique ID of the created store.
-                - "name" (str): The name of the created store.
+            "id" (int): The unique ID of the created store.
+            "name" (str): The name of the created store.
 
     Raises:
-        Exception: If any error occurs during the database transaction, it is rolled back, 
-                   and the exception is re-raised.
+        Exception: If any error occurs during the database transaction, it is rolled back, and the exception is re-raised.
     """
     try:
         # Create and save new store
