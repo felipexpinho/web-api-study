@@ -15,7 +15,17 @@ class Store(Base):
         return {
             "id": self.id,
             "name": self.name,
+            "stock": self._getProductStock()
         }
+    
+    def _asdict_no_stock(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
+    
+    def _getProductStock(self):
+        return [stock._asdict() for stock in self.stock]
 
     def getId(self):
         return self.id
