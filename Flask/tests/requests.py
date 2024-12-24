@@ -246,3 +246,5 @@ def populate_table():
     create_stock(1, 2, 800, True, "Tênis")
     create_stock(2, 3, 800, True, "Tênis")
     create_stock(2, 4, 600, True, "Tênis")
+
+get_product(id=1)
