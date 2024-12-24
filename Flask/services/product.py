@@ -12,18 +12,26 @@ def create_product_service(product_data: dict, db: Session) -> dict:
 
     Args:
         product_data (dict): A dictionary containing the details of the product to be created.
-            Required key: "name" (str): The name of the product.
+            Required key: name (str): The name of the product.
         db (Session): SQLAlchemy session object.
 
     Returns:
         dict: A dictionary containing the details of the created product.
-            "id" (int): The unique ID of the created product.
-            "name" (str): The name of the created product.
+            id (int): The unique ID of the created product.
+            name (str): The name of the created product.
 
     Raises:
         Exception: If any error occurs during the database transaction, it is rolled back, and the exception is re-raised.
+        KeyError: If required fields are missing in the update data.
+        TypeError: If the field types are incorrect.
     """
     try:
+        if "name" not in product_data:
+            raise KeyError("Field 'name' not found")
+
+        if not isinstance(product_data["name"], str) or not product_data["name"]:
+            raise TypeError("Input should be a valid string")
+        
         new_product = Product(name=product_data["name"])
         db.add(new_product)
         db.commit()
@@ -54,9 +62,9 @@ def get_products_service(db: Session, product_id: Optional[int] = None, name: Op
     query = db.query(Product).options(joinedload(Product.stock).joinedload(Stock.store))
 
     # Filter by product ID or name if provided
-    if product_id is not None:
+    if product_id:
         query = query.filter(Product.id == product_id)
-    if name:
+    if name is not None:
         query = query.filter(Product.name.ilike(f"%{name}%"))
 
     products = query.all()
@@ -114,7 +122,15 @@ def update_product_service(product_id: int, product_update: dict, db: Session) -
         
     Raises:
         ValueError: If the product with the given ID is not found.
+        KeyError: If required fields are missing in the update data.
+        TypeError: If the field types are incorrect.
     """
+    if "name" not in product_update:
+        raise KeyError("Field 'name' not found")
+
+    if not isinstance(product_update["name"], str) or not product_update["name"]:
+        raise TypeError("Input should be a valid string")
+
     product = db.query(Product).filter(Product.id == product_id).first()
 
     if not product:

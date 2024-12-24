@@ -13,18 +13,26 @@ def create_store_service(store_data: dict, db: Session) -> dict:
 
     Args:
         store_data (dict): A dictionary containing the details of the store to be created.
-            Required key: "name" (str): The name of the store.
+            Required key: name (str): The name of the store.
         db (Session): SQLAlchemy session object.
 
     Returns:
         dict: A dictionary containing the details of the created store.
-            "id" (int): The unique ID of the created store.
-            "name" (str): The name of the created store.
+            id (int): The unique ID of the created store.
+            name (str): The name of the created store.
 
     Raises:
         Exception: If any error occurs during the database transaction, it is rolled back, and the exception is re-raised.
+        KeyError: If required fields are missing in the update data.
+        TypeError: If the field types are incorrect.
     """
     try:
+        if "name" not in store_data:
+            raise KeyError("Field 'name' not found")
+
+        if not isinstance(store_data["name"], str) or not store_data["name"]:
+            raise TypeError("Input should be a valid string")
+        
         # Create and save new store
         new_store = Store(name=store_data["name"])
         db.add(new_store)
@@ -119,7 +127,15 @@ def update_store_service(store_id: int, store_update: dict, db: Session) -> dict
         
     Raises:
         ValueError: If the store with the given ID is not found.
+        KeyError: If required fields are missing in the update data.
+        TypeError: If the field types are incorrect.
     """
+    if "name" not in store_update:
+        raise KeyError("Field 'name' not found")
+
+    if not isinstance(store_update["name"], str) or not store_update["name"]:
+        raise TypeError("Input should be a valid string")
+    
     store = db.query(Store).filter(Store.id == store_id).first()
     
     if not store:
