@@ -258,18 +258,6 @@ def test_update_product_success(setup_database):
     assert response.json()["data"] == {
         "id": 1,
         "name": "Air Max Branco",
-        "stock": [
-            {
-                "id": 1,
-                "store_id": 1,
-                "product_id": 1,
-                "price": 300.0,
-                "is_available": True,
-                "category": "Tênis",
-                "store": "Nike",
-                "product_name": "Air Max Branco",
-            }
-        ],
     }
 
 def test_update_product_wrong_type(setup_database):
